@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import Contacts from './Contacts'
-import Number from './Contacts'
+import Contacts from './components/Contacts'
+import Number from './components/Contacts'
 
 const App = () => {
   const [persons, setPersons] = useState([
