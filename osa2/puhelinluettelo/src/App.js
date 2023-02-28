@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import Person from './components/Person'
 
-
+//jääty 2.7
 
 
 const App = (props) => {
@@ -10,13 +10,16 @@ const App = (props) => {
 
   const addPerson = (event) => {
     event.preventDefault()
+    if(persons.find((person) => newName === person.name)) {
+      alert("${newName} is already added to the phonebook");
+    } 
     const contactObject = {
       content: newName,
-      id: persons.length
+      name: persons.name
     }
-
+   
     setPersons(persons.concat(contactObject))
-    setNewName('')
+    setNewName('') 
   }
 
   const handlePersonChange = (event) => {
@@ -39,7 +42,7 @@ const App = (props) => {
       </form>
       <h2>Numbers</h2>
       {persons.map(person => 
-          <Person key={person.id} person={person} />
+          <Person key={person.name} person={person} />
         )}
     </div>
   )
