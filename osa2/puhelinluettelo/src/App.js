@@ -1,33 +1,37 @@
-import {useState} from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Person from './components/Person'
 import Number from './components/Number'
 
-//alert ei toimi?
 
 
 const App = (props) => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [ searchTerm, setSearchTerm] = useState('')
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+      })
+  }, [])
   
+  
+  console.log('render', persons.length, 'persons')
 
-  const handlePersonChange = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
-  }
-
-  const handleNumberChange = (event) => {
-    console.log(event.target.value)
-    setNewNumber(event.target.value)
-  }
-    
   const addPerson = (event) => {
     event.preventDefault()
     const newContact = {
       name: newName,
-      number: newNumber
+      number: newNumber,
+      id: persons.length +1,
     }
-    
+
     let matchPerson = null;
     
     for(const person of persons) {
@@ -47,11 +51,28 @@ const App = (props) => {
 
   }
 
+  const handlePersonChange = (event) => {
+    setNewName(event.target.value)
+  }
+
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value)
+  }
+
+
+  
+
   
   
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+          <label>filter shown with:
+           <input type="text" onChange={event => {setSearchTerm(event.target.value)}}/>
+          </label>
+        </div>
+      <h2>Add a new</h2>
       <form onSubmit={addPerson}>
         <div>
           <label>name:
@@ -66,14 +87,19 @@ const App = (props) => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map(person =>
+      {persons.filter((val) => {
+        if(searchTerm == "") {
+          return val
+        } else if (val.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+          return val
+        }
+      }).map(person =>
            <div>
            <p> {person.name} {person.number}</p>
           </div>
         )} 
     </div>
   )
-
 }
 
 export default App
