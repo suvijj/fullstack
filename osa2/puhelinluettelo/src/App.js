@@ -3,6 +3,7 @@ import axios from 'axios'
 import Person from './components/Person'
 import Number from './components/Number'
 
+//Jääty tehtävään 2.12-2.15
 
 
 const App = (props) => {
@@ -49,6 +50,13 @@ const App = (props) => {
     setNewNumber('')
     }
 
+    axios
+    .post('http://localhost:3001/persons', newContact)
+    .then(response => {
+      setPersons(persons.concat(response.data))
+      setNewName('')
+    })
+
   }
 
   const handlePersonChange = (event) => {
@@ -59,7 +67,10 @@ const App = (props) => {
     setNewNumber(event.target.value)
   }
 
-
+  const deletePerson = (id) => {
+    const url = `http://localhost:3001/persons/${id}`
+    const person = persons.find(n=>n.id === id)
+  }
   
 
   
@@ -95,7 +106,7 @@ const App = (props) => {
         }
       }).map(person =>
            <div>
-           <p> {person.name} {person.number}</p>
+           <p> {person.name} {person.number} deletePerson={deletePerson}</p>
           </div>
         )} 
     </div>
